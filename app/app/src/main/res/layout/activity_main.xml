@@ -31,7 +31,8 @@
         android:layout_marginBottom="20dp"
         android:text="Image Classify"
         android:textAlignment="center"
-        android:textsize="30dp" />
+        android:textSize="30dp"
+        />
 
     <ImageView
         android:layout_width="200dp"
@@ -80,7 +81,7 @@
         android:layout_marginBottom="20dp"
         android:text="Results"
         android:textAlignment="center"
-        android:textsize="30dp"
+        android:textSize="30dp"
         android:layout_below="@id/predictBtn"
         />
 
