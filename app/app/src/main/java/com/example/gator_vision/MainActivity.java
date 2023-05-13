@@ -62,11 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
 //        permission for camera
         getPermission();
-        String[] labels = new String[6];
+//        String[] labels = new String[6];
+        String[] labels = {"Buckeye","couple","Gator_Spirit","pole","St_Francis","we_stand"};
+
         int cnt = 0;
 
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("labels.txt")));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("assests/labels")));
             String line = bufferedReader.readLine();
             while (line !=null){
                 labels[cnt]=line;
