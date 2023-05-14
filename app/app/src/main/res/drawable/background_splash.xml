@@ -3,8 +3,16 @@
     <item android:drawable="@color/white" />
     <item>
         <bitmap
+            android:layout_width="match_parent"
             android:gravity="center"
-            android:src="@drawable/logo"></bitmap>
+            android:src="@drawable/logo" />
+    </item>
+    <item>
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/title"
+            />
+
     </item>
 
 </layer-list>

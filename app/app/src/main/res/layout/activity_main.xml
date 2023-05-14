@@ -29,9 +29,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Image Classify"
+        android:text="Please Take or Upload Image"
         android:textAlignment="center"
-        android:textSize="30dp"
+        android:textSize="20dp"
         />
 
     <ImageView
