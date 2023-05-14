@@ -12,11 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gator_vision"
         tools:targetApi="31">
+
+        <activity android:name=".MainActivity"
+            android:exported="true">
+
+        </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreen"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Gator_vision.NoActionBar">
+            android:theme="@style/SplashScreen"
+            android:label="@string/app_name">
+<!--            android:theme="@style/Theme.Gator_vision.NoActionBar">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

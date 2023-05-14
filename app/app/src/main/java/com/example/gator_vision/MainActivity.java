@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.gator_vision.ml.EfficientnetLite4Fp322;
 import com.example.gator_vision.ml.Gator;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -34,6 +35,7 @@ import android.widget.TextView;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import org.tensorflow.lite.support.image.TensorImage;
 
@@ -41,6 +43,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,42 +114,67 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                When model is imported, suggested code goes here.
 //                Import all classes that are not already included.
-
                 try {
-                    Gator model = Gator.newInstance(MainActivity.this);
+                    EfficientnetLite4Fp322 model = EfficientnetLite4Fp322.newInstance(MainActivity.this);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 260,260, true);
 
                     // Creates inputs for reference.
-                    TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 256, 256, 3}, DataType.FLOAT32);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 256,256, true);
-                    inputFeature0.loadBuffer(TensorImage.fromBitmap(bitmap).getBuffer());
+                    TensorImage image = TensorImage.fromBitmap(bitmap);
 
                     // Runs model inference and gets result.
-                    Gator.Outputs outputs = model.process(inputFeature0);
-
-                    TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-
-                    result.setText(labels[getMax(outputFeature0.getFloatArray())]+" ");
+                    EfficientnetLite4Fp322.Outputs outputs = model.process(image);
+                    List<Category> probability = outputs.getProbabilityAsCategoryList();
+                    int index = getMax(probability);
+                    String label = probability.get(index).getLabel() ;
+                    float score = probability.get(index).getScore()*100;
+                    result.setText(label+" "+score);
 
                     // Releases model resources if no longer used.
                     model.close();
                 } catch (IOException e) {
                     // TODO Handle the exception
-
-                    e.printStackTrace();
-
                 }
+//                try {
+//                    Gator model = Gator.newInstance(MainActivity.this);
+//
+//                    // Creates inputs for reference.
+//                    TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 256, 256, 3}, DataType.FLOAT32);
+//                    bitmap = Bitmap.createScaledBitmap(bitmap, 256,256, true);
+//                    inputFeature0.loadBuffer(TensorImage.fromBitmap(bitmap).getBuffer());
+//
+//                    // Runs model inference and gets result.
+//                    Gator.Outputs outputs = model.process(inputFeature0);
+//
+//                    TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+//
+//                    result.setText(labels[getMax(outputFeature0.getFloatArray())]+" ");
+//
+//                    // Releases model resources if no longer used.
+//                    model.close();
+//                } catch (IOException e) {
+//                    // TODO Handle the exception
+//                    TextView error = findViewById(R.id.result);
+//                    error.setText("Error");
+//                    e.printStackTrace();
+//
+//                }
 
             }
         });
     }
 
-    int getMax(float[] arr){
-        int max = 0;
-        for (int i = 0; i<arr.length; i++){
+    int getMax(List<Category>  probability){
+        float max_score = Float.NEGATIVE_INFINITY;
+        int index = -1;
 
-            if(arr[i] > arr[max]) max =i ;
+        for (int i = 0; i < probability.size(); i++ ){
+            if(probability.get(i).getScore() > max_score ){
+                max_score = probability.get(i).getScore();
+                index = i;
+            }
         }
-        return max;
+
+        return index;
     }
     void getPermission(){
         if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
