@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.gator_vision.ml.BasicKerasReady;
 import com.example.gator_vision.ml.EfficientnetLite4Fp322;
 import com.example.gator_vision.ml.Gator;
 import com.google.android.material.snackbar.Snackbar;
@@ -134,6 +135,25 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     // TODO Handle the exception
                 }
+                try {
+                    BasicKerasReady model = BasicKerasReady.newInstance(MainActivity.this);
+
+
+                    // Creates inputs for reference.
+                    TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 260, 260, 3}, DataType.FLOAT32);
+                    inputFeature0.loadBuffer(byteBuffer);
+
+                    // Runs model inference and gets result.
+                    BasicKerasReady.Outputs outputs = model.process(inputFeature0);
+                    TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+
+                    // Releases model resources if no longer used.
+                    model.close();
+                } catch (IOException e) {
+                    // TODO Handle the exception
+                }
+
+
 //                try {
 //                    Gator model = Gator.newInstance(MainActivity.this);
 //
