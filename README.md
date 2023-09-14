@@ -93,4 +93,67 @@ shear_range =0.2 ,
 zoom_range =0.2 ,
 horizontal_flip =True ,
 vertical_flip =True ,
+ fill_mode =’nearest ’
+) # Normalize pixel values between 0 and 1
+ val_datagen = ImageDataGenerator (
+ rescale =1./255 ,
+ rotation_range =20 ,
+ width_shift_range =0.2 ,
+ height_shift_range =0.2 ,
+ shear_range =0.2 ,
+ zoom_range =0.2 ,
+ horizontal_flip =True ,
+ vertical_flip =True ,
+ fill_mode =’nearest ’
+ )
 ```
+
+## 2.1 Evaluation
+The model was completed with about 81% accuracy. However when
+tested on the android application the app guessed the status correctly
+less than half of the time. In this next section, I will be reviewing
+some of the shortcomings that caused the inaccuracy. And try to
+pinpoint strategies that will improve the model’s accuracy in the
+future.
+
+## 2.2 Methodology
+• Use TensorFlow to train our dataset on the first layer of the
+MobileNetV2 model and freeze the other lower layers.
+• Convert the trained model into a model and test its accuracy.
+• Implement more rigorous fine-tuning methods or add more
+variety to the training/validation set.
+• Create a TensorFlow Lite file that could be used in Android
+Studios and test real-life accuracy
+
+## 2.2 Experiment 1 - EfficientNet
+When creating the model, I for some reason was confused about the
+training and validation sets. When I finally got all the settings down
+and the file compiled with no issues, the accuracy graphs made no
+sense. After 1 epoch, the accuracy would hit 100% immediately.
+The only way this is possible is that the training images and the
+validation images match each other. This was indeed the case, the
+training and validation sets had the same path, which caused the
+issue. <br/>
+At this time I was using the EfficientNet model. What cause me to
+switch models was that after the models were converted to a Tensor
+flow Lite file, the input shapes would not match. This would cause
+the application to crash whenever the model was in use.
+
+## 2.3 Findings and Discussion
+In the end, I realized that the training datasets were not diverse
+enough. I recorded only about 30 seconds of video and exported
+frames every 1-2 seconds. When recording I needed to make the
+images as different as possible. I also used an iPhone camera instead
+of an android with also changes the way the model interpreters the
+photos.
+
+## ACKNOWLEDGMENTS
+The authors wish to thank A, B, C. This work was supported in
+part by a grant from XYZ. Comment: you don’t need this section
+in final project report, but you will need it when you create a final,
+camera-ready version of a technical paper for publication.
+## REFERENCES
+[1] San francisco state university. U.S. News & World Report.
+[2] G. Grinstein, D. Keim, and M. Ward. Information visualization, visual
+data mining, and its application to drug design. IEEE Visualization
+Course #1 Notes, October 2002
